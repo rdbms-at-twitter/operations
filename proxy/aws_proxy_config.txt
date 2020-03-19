@@ -1,0 +1,222 @@
+■ 踏み台サーバーの設定
+
+[root@ip-192-168-100-1 ec2-user]# yum -y install squid
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+amzn2-core                                                                                                                                                          | 2.4 kB  00:00:00     
+Resolving Dependencies
+--> Running transaction check
+---> Package squid.x86_64 7:3.5.20-12.amzn2 will be installed
+--> Processing Dependency: squid-migration-script for package: 7:squid-3.5.20-12.amzn2.x86_64
+--> Processing Dependency: perl(Digest::MD5) for package: 7:squid-3.5.20-12.amzn2.x86_64
+--> Processing Dependency: perl(Data::Dumper) for package: 7:squid-3.5.20-12.amzn2.x86_64
+--> Processing Dependency: perl(DBI) for package: 7:squid-3.5.20-12.amzn2.x86_64
+--> Processing Dependency: libltdl.so.7()(64bit) for package: 7:squid-3.5.20-12.amzn2.x86_64
+--> Processing Dependency: libecap.so.3()(64bit) for package: 7:squid-3.5.20-12.amzn2.x86_64
+--> Running transaction check
+---> Package libecap.x86_64 0:1.0.0-1.amzn2.0.2 will be installed
+---> Package libtool-ltdl.x86_64 0:2.4.2-22.2.amzn2.0.2 will be installed
+---> Package perl-DBI.x86_64 0:1.627-4.amzn2.0.2 will be installed
+--> Processing Dependency: perl(RPC::PlServer) >= 0.2001 for package: perl-DBI-1.627-4.amzn2.0.2.x86_64
+--> Processing Dependency: perl(RPC::PlClient) >= 0.2000 for package: perl-DBI-1.627-4.amzn2.0.2.x86_64
+---> Package perl-Data-Dumper.x86_64 0:2.145-3.amzn2.0.2 will be installed
+---> Package perl-Digest-MD5.x86_64 0:2.52-3.amzn2.0.2 will be installed
+--> Processing Dependency: perl(Digest::base) >= 1.00 for package: perl-Digest-MD5-2.52-3.amzn2.0.2.x86_64
+---> Package squid-migration-script.x86_64 7:3.5.20-12.amzn2 will be installed
+--> Running transaction check
+---> Package perl-Digest.noarch 0:1.17-245.amzn2 will be installed
+---> Package perl-PlRPC.noarch 0:0.2020-14.amzn2 will be installed
+--> Processing Dependency: perl(Net::Daemon) >= 0.13 for package: perl-PlRPC-0.2020-14.amzn2.noarch
+--> Processing Dependency: perl(Net::Daemon::Test) for package: perl-PlRPC-0.2020-14.amzn2.noarch
+--> Processing Dependency: perl(Net::Daemon::Log) for package: perl-PlRPC-0.2020-14.amzn2.noarch
+--> Processing Dependency: perl(Compress::Zlib) for package: perl-PlRPC-0.2020-14.amzn2.noarch
+--> Running transaction check
+---> Package perl-IO-Compress.noarch 0:2.061-2.amzn2 will be installed
+--> Processing Dependency: perl(Compress::Raw::Zlib) >= 2.061 for package: perl-IO-Compress-2.061-2.amzn2.noarch
+--> Processing Dependency: perl(Compress::Raw::Bzip2) >= 2.061 for package: perl-IO-Compress-2.061-2.amzn2.noarch
+---> Package perl-Net-Daemon.noarch 0:0.48-5.amzn2 will be installed
+--> Running transaction check
+---> Package perl-Compress-Raw-Bzip2.x86_64 0:2.061-3.amzn2.0.2 will be installed
+---> Package perl-Compress-Raw-Zlib.x86_64 1:2.061-4.amzn2.0.2 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+===========================================================================================================================================================================================
+ Package                                              Arch                                Version                                            Repository                               Size
+===========================================================================================================================================================================================
+Installing:
+ squid                                                x86_64                              7:3.5.20-12.amzn2                                  amzn2-core                              3.2 M
+Installing for dependencies:
+ libecap                                              x86_64                              1.0.0-1.amzn2.0.2                                  amzn2-core                               21 k
+ libtool-ltdl                                         x86_64                              2.4.2-22.2.amzn2.0.2                               amzn2-core                               49 k
+ perl-Compress-Raw-Bzip2                              x86_64                              2.061-3.amzn2.0.2                                  amzn2-core                               32 k
+ perl-Compress-Raw-Zlib                               x86_64                              1:2.061-4.amzn2.0.2                                amzn2-core                               58 k
+ perl-DBI                                             x86_64                              1.627-4.amzn2.0.2                                  amzn2-core                              804 k
+ perl-Data-Dumper                                     x86_64                              2.145-3.amzn2.0.2                                  amzn2-core                               48 k
+ perl-Digest                                          noarch                              1.17-245.amzn2                                     amzn2-core                               23 k
+ perl-Digest-MD5                                      x86_64                              2.52-3.amzn2.0.2                                   amzn2-core                               30 k
+ perl-IO-Compress                                     noarch                              2.061-2.amzn2                                      amzn2-core                              260 k
+ perl-Net-Daemon                                      noarch                              0.48-5.amzn2                                       amzn2-core                               51 k
+ perl-PlRPC                                           noarch                              0.2020-14.amzn2                                    amzn2-core                               36 k
+ squid-migration-script                               x86_64                              7:3.5.20-12.amzn2                                  amzn2-core                               49 k
+
+Transaction Summary
+===========================================================================================================================================================================================
+Install  1 Package (+12 Dependent packages)
+
+Total download size: 4.6 M
+Installed size: 14 M
+Downloading packages:
+(1/13): libtool-ltdl-2.4.2-22.2.amzn2.0.2.x86_64.rpm                                                                                                                |  49 kB  00:00:00     
+(2/13): perl-Compress-Raw-Bzip2-2.061-3.amzn2.0.2.x86_64.rpm                                                                                                        |  32 kB  00:00:00     
+(3/13): libecap-1.0.0-1.amzn2.0.2.x86_64.rpm                                                                                                                        |  21 kB  00:00:00     
+(4/13): perl-Compress-Raw-Zlib-2.061-4.amzn2.0.2.x86_64.rpm                                                                                                         |  58 kB  00:00:00     
+(5/13): perl-Data-Dumper-2.145-3.amzn2.0.2.x86_64.rpm                                                                                                               |  48 kB  00:00:00     
+(6/13): perl-Digest-1.17-245.amzn2.noarch.rpm                                                                                                                       |  23 kB  00:00:00     
+(7/13): perl-Digest-MD5-2.52-3.amzn2.0.2.x86_64.rpm                                                                                                                 |  30 kB  00:00:00     
+(8/13): perl-DBI-1.627-4.amzn2.0.2.x86_64.rpm                                                                                                                       | 804 kB  00:00:00     
+(9/13): perl-IO-Compress-2.061-2.amzn2.noarch.rpm                                                                                                                   | 260 kB  00:00:00     
+(10/13): perl-Net-Daemon-0.48-5.amzn2.noarch.rpm                                                                                                                    |  51 kB  00:00:00     
+(11/13): perl-PlRPC-0.2020-14.amzn2.noarch.rpm                                                                                                                      |  36 kB  00:00:00     
+(12/13): squid-migration-script-3.5.20-12.amzn2.x86_64.rpm                                                                                                          |  49 kB  00:00:00     
+(13/13): squid-3.5.20-12.amzn2.x86_64.rpm                                                                                                                           | 3.2 MB  00:00:00     
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                                                                       11 MB/s | 4.6 MB  00:00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : perl-Data-Dumper-2.145-3.amzn2.0.2.x86_64                                                                                                                              1/13 
+  Installing : libtool-ltdl-2.4.2-22.2.amzn2.0.2.x86_64                                                                                                                               2/13 
+  Installing : 7:squid-migration-script-3.5.20-12.amzn2.x86_64                                                                                                                        3/13 
+  Installing : perl-Digest-1.17-245.amzn2.noarch                                                                                                                                      4/13 
+  Installing : perl-Digest-MD5-2.52-3.amzn2.0.2.x86_64                                                                                                                                5/13 
+  Installing : perl-Compress-Raw-Bzip2-2.061-3.amzn2.0.2.x86_64                                                                                                                       6/13 
+  Installing : libecap-1.0.0-1.amzn2.0.2.x86_64                                                                                                                                       7/13 
+  Installing : perl-Net-Daemon-0.48-5.amzn2.noarch                                                                                                                                    8/13 
+  Installing : 1:perl-Compress-Raw-Zlib-2.061-4.amzn2.0.2.x86_64                                                                                                                      9/13 
+  Installing : perl-IO-Compress-2.061-2.amzn2.noarch                                                                                                                                 10/13 
+  Installing : perl-PlRPC-0.2020-14.amzn2.noarch                                                                                                                                     11/13 
+  Installing : perl-DBI-1.627-4.amzn2.0.2.x86_64                                                                                                                                     12/13 
+  Installing : 7:squid-3.5.20-12.amzn2.x86_64                                                                                                                                        13/13 
+  Verifying  : 1:perl-Compress-Raw-Zlib-2.061-4.amzn2.0.2.x86_64                                                                                                                      1/13 
+  Verifying  : perl-IO-Compress-2.061-2.amzn2.noarch                                                                                                                                  2/13 
+  Verifying  : perl-Net-Daemon-0.48-5.amzn2.noarch                                                                                                                                    3/13 
+  Verifying  : 7:squid-3.5.20-12.amzn2.x86_64                                                                                                                                         4/13 
+  Verifying  : perl-Data-Dumper-2.145-3.amzn2.0.2.x86_64                                                                                                                              5/13 
+  Verifying  : perl-PlRPC-0.2020-14.amzn2.noarch                                                                                                                                      6/13 
+  Verifying  : perl-Digest-MD5-2.52-3.amzn2.0.2.x86_64                                                                                                                                7/13 
+  Verifying  : libecap-1.0.0-1.amzn2.0.2.x86_64                                                                                                                                       8/13 
+  Verifying  : perl-Compress-Raw-Bzip2-2.061-3.amzn2.0.2.x86_64                                                                                                                       9/13 
+  Verifying  : perl-Digest-1.17-245.amzn2.noarch                                                                                                                                     10/13 
+  Verifying  : 7:squid-migration-script-3.5.20-12.amzn2.x86_64                                                                                                                       11/13 
+  Verifying  : perl-DBI-1.627-4.amzn2.0.2.x86_64                                                                                                                                     12/13 
+  Verifying  : libtool-ltdl-2.4.2-22.2.amzn2.0.2.x86_64                                                                                                                              13/13 
+
+Installed:
+  squid.x86_64 7:3.5.20-12.amzn2                                                                                                                                                           
+
+Dependency Installed:
+  libecap.x86_64 0:1.0.0-1.amzn2.0.2      libtool-ltdl.x86_64 0:2.4.2-22.2.amzn2.0.2  perl-Compress-Raw-Bzip2.x86_64 0:2.061-3.amzn2.0.2 perl-Compress-Raw-Zlib.x86_64 1:2.061-4.amzn2.0.2
+  perl-DBI.x86_64 0:1.627-4.amzn2.0.2     perl-Data-Dumper.x86_64 0:2.145-3.amzn2.0.2 perl-Digest.noarch 0:1.17-245.amzn2                perl-Digest-MD5.x86_64 0:2.52-3.amzn2.0.2        
+  perl-IO-Compress.noarch 0:2.061-2.amzn2 perl-Net-Daemon.noarch 0:0.48-5.amzn2       perl-PlRPC.noarch 0:0.2020-14.amzn2                squid-migration-script.x86_64 7:3.5.20-12.amzn2  
+
+Complete!
+[root@ip-192-168-100-1 ec2-user]# 
+[root@ip-192-168-100-1 ec2-user]# 
+[root@ip-192-168-100-1 ec2-user]# 
+[root@ip-192-168-100-1 ec2-user]# systemctl start squid
+[root@ip-192-168-100-1 ec2-user]# systemctl status squid
+● squid.service - Squid caching proxy
+   Loaded: loaded (/usr/lib/systemd/system/squid.service; disabled; vendor preset: disabled)
+   Active: active (running) since Mon 2019-07-22 03:15:27 UTC; 8s ago
+  Process: 20333 ExecStart=/usr/sbin/squid $SQUID_OPTS -f $SQUID_CONF (code=exited, status=0/SUCCESS)
+  Process: 20328 ExecStartPre=/usr/libexec/squid/cache_swap.sh (code=exited, status=0/SUCCESS)
+ Main PID: 20336 (squid)
+   CGroup: /system.slice/squid.service
+           ├20336 /usr/sbin/squid -f /etc/squid/squid.conf
+           ├20338 (squid-1) -f /etc/squid/squid.conf
+           └20339 (logfile-daemon) /var/log/squid/access.log
+
+Jul 22 03:15:27 ip-192-168-100-1.ap-northeast-1.compute.internal systemd[1]: Starting Squid caching proxy...
+Jul 22 03:15:27 ip-192-168-100-1.ap-northeast-1.compute.internal systemd[1]: Started Squid caching proxy.
+Jul 22 03:15:27 ip-192-168-100-1.ap-northeast-1.compute.internal squid[20336]: Squid Parent: will start 1 kids
+Jul 22 03:15:27 ip-192-168-100-1.ap-northeast-1.compute.internal squid[20336]: Squid Parent: (squid-1) process 20338 started
+[root@ip-192-168-100-1 ec2-user]# systemctl  enable squid
+Created symlink from /etc/systemd/system/multi-user.target.wants/squid.service to /usr/lib/systemd/system/squid.service.
+[root@ip-192-168-100-1 ec2-user]# cd /etc/squid/
+[root@ip-192-168-100-1 squid]# 
+
+
+[root@ip-192-168-100-1 squid]# service squid restart
+Redirecting to /bin/systemctl restart squid.service
+[root@ip-192-168-100-1 squid]# 
+[root@ip-192-168-100-1 squid]# systemctl status squid
+● squid.service - Squid caching proxy
+   Loaded: loaded (/usr/lib/systemd/system/squid.service; enabled; vendor preset: disabled)
+   Active: active (running) since Mon 2019-07-22 03:25:11 UTC; 5s ago
+  Process: 20467 ExecStop=/usr/sbin/squid -k shutdown -f $SQUID_CONF (code=exited, status=0/SUCCESS)
+  Process: 20475 ExecStart=/usr/sbin/squid $SQUID_OPTS -f $SQUID_CONF (code=exited, status=0/SUCCESS)
+  Process: 20470 ExecStartPre=/usr/libexec/squid/cache_swap.sh (code=exited, status=0/SUCCESS)
+ Main PID: 20478 (squid)
+   CGroup: /system.slice/squid.service
+           ├20478 /usr/sbin/squid -f /etc/squid/squid.conf
+           ├20480 (squid-1) -f /etc/squid/squid.conf
+           └20481 (logfile-daemon) /var/log/squid/access.log
+
+Jul 22 03:25:11 ip-192-168-100-1.ap-northeast-1.compute.internal systemd[1]: Starting Squid caching proxy...
+Jul 22 03:25:11 ip-192-168-100-1.ap-northeast-1.compute.internal systemd[1]: Started Squid caching proxy.
+Jul 22 03:25:11 ip-192-168-100-1.ap-northeast-1.compute.internal squid[20478]: Squid Parent: will start 1 kids
+Jul 22 03:25:11 ip-192-168-100-1.ap-northeast-1.compute.internal squid[20478]: Squid Parent: (squid-1) process 20480 started
+[root@ip-192-168-100-1 squid]# 
+
+
+
+
+※　上記アクセスするには、各サブネットから踏み台サーバーへのインバウンド設定の許可(セキュリティグループ設定)が必要（サブネットとPort:8080を追加してあげればOK)
+
+
+
+
+■ クライアント側の設定
+
+
+[root@ip-192-168-100-10 profile.d]# cat /etc/yum.conf 
+[main]
+cachedir=/var/cache/yum/$basearch/$releasever
+keepcache=0
+debuglevel=2
+logfile=/var/log/yum.log
+exactarch=1
+obsoletes=1
+gpgcheck=1
+plugins=1
+installonly_limit=3
+distroverpkg=system-release
+timeout=5
+retries=7
+
+
+#  This is the default, if you make this bigger yum won't see if the metadata
+# is newer on the remote and so you'll "gain" the bandwidth of not having to
+# download the new metadata and "pay" for it by yum not having correct
+# information.
+#  It is esp. important, to have correct metadata, for distributions like
+# Fedora which don't keep old packages around. If you don't like this checking
+# interupting your command line usage, it's much better to have something
+# manually check the metadata once an hour (yum-updatesd will do this).
+# metadata_expire=90m
+
+# PUT YOUR REPOS HERE OR IN separate files named file.repo
+# in /etc/yum.repos.d
+proxy=http://192.168.100.1:8080
+
+[root@ip-192-168-100-10 profile.d]# cat /etc/profile.d/proxy.sh 
+export http_proxy="http://192.168.100.1:8080"
+export https_proxy="http://192.168.100.1:8080"
+export ftp_proxy="http://192.168.100.1:8080"
+export HTTP_PROXY="http://192.168.100.1:8080"
+export HTTPS_PROXY="http://192.168.100.1:8080"
+export FTP_PROXY="http://192.168.100.1:8080"
+[root@ip-192-168-100-10 profile.d]# 
+

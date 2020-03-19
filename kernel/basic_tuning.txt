@@ -1,0 +1,136 @@
+-----------------------------------------------------------------
+limit.cnfの設定を変更
+-----------------------------------------------------------------
+
+
+[root@mysql01 root]# vim /etc/security/limits.conf
+
+以下追加
+[root@mysql01 root]# cat /etc/security/limits.conf | grep nofile
+#        - nofile - max number of open file descriptors
+* soft nofile 163840
+* hard nofile 163840
+[root@mysql01 root]# 
+
+[root@mysql01 root]# ulimit -a
+core file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 515649
+max locked memory       (kbytes, -l) 64
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 163840
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 515649
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+[root@mysql01 root]#
+
+
+------------------------------------------------------------
+grib2の編集
+------------------------------------------------------------
+
+[root@mysql01 home]# cat /etc/default/grub
+GRUB_TIMEOUT=5
+GRUB_DEFAULT=saved
+GRUB_DISABLE_SUBMENU=true
+GRUB_TERMINAL_OUTPUT="console"
+GRUB_CMDLINE_LINUX="vconsole.keymap=jp106 vga=771 rhgb quiet"
+GRUB_DISABLE_RECOVERY="true"[root@mysql01 home]# vim /etc/default/grub 
+[root@mysql01 home]# cat /etc/default/grub 
+GRUB_TIMEOUT=5
+GRUB_DEFAULT=saved
+GRUB_DISABLE_SUBMENU=true
+GRUB_TERMINAL_OUTPUT="console"
+GRUB_CMDLINE_LINUX="vconsole.keymap=jp106 vga=771 rhgb quiet elevator=noop"
+GRUB_DISABLE_RECOVERY="true"
+[root@mysql01 home]# 
+
+
+[root@mysql01 home]# cat /boot/grub2/grub.cfg | grep noop
+[root@mysql01 home]# grub2-mkconfig -o /boot/grub2/grub.cfg
+Generating grub configuration file ...
+Found linux image: /boot/vmlinuz-3.10.0-862.9.1.el7.x86_64
+Found initrd image: /boot/initramfs-3.10.0-862.9.1.el7.x86_64.img
+Found linux image: /boot/vmlinuz-3.10.0-693.21.1.el7.x86_64
+Found initrd image: /boot/initramfs-3.10.0-693.21.1.el7.x86_64.img
+Found linux image: /boot/vmlinuz-0-rescue-89d1cfd3c402410e9ff55e8cc15860bf
+Found initrd image: /boot/initramfs-0-rescue-89d1cfd3c402410e9ff55e8cc15860bf.img
+Found linux image: /boot/vmlinuz-0-rescue-bd0b1a702970400297d3bfcb444db1f5
+Found initrd image: /boot/initramfs-0-rescue-bd0b1a702970400297d3bfcb444db1f5.img
+done
+[root@mysql01 home]# cat /boot/grub2/grub.cfg | grep noop
+        linux16 /boot/vmlinuz-3.10.0-862.9.1.el7.x86_64 root=UUID=e2c7de5d-2a7e-4130-b7a1-6dc6c06f3cf3 ro vconsole.keymap=jp106 vga=771 rhgb quiet elevator=noop 
+        linux16 /boot/vmlinuz-3.10.0-693.21.1.el7.x86_64 root=UUID=e2c7de5d-2a7e-4130-b7a1-6dc6c06f3cf3 ro vconsole.keymap=jp106 vga=771 rhgb quiet elevator=noop 
+        linux16 /boot/vmlinuz-0-rescue-89d1cfd3c402410e9ff55e8cc15860bf root=UUID=e2c7de5d-2a7e-4130-b7a1-6dc6c06f3cf3 ro vconsole.keymap=jp106 vga=771 rhgb quiet elevator=noop 
+        linux16 /boot/vmlinuz-0-rescue-bd0b1a702970400297d3bfcb444db1f5 root=UUID=e2c7de5d-2a7e-4130-b7a1-6dc6c06f3cf3 ro vconsole.keymap=jp106 vga=771 rhgb quiet elevator=noop 
+[root@mysql01 home]# 
+
+[root@mysql01 root]# grub2-editenv list
+saved_entry=CentOS Linux (3.10.0-862.9.1.el7.x86_64) 7 (Core)
+[root@mysql01 root]# 
+
+
+------------------------------------------------------------
+https://access.redhat.com/documentation/ja-jp/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-customizing_the_grub_2_configuration_file
+http://enakai00.hatenablog.com/entry/2015/11/27/152442
+https://access.redhat.com/solutions/5427
+
+
+
+----------------------------------------------------------------------------
+カーネルチューニング：　/etc/sysctl.d/
+----------------------------------------------------------------------------
+[root@mysql01 /]# cat /proc/sys/fs/file-max
+13089263
+[root@mysql01 /]# sysctl -n net.core.somaxconn
+128
+[root@mysql01 /]# sysctl -n vm.overcommit_ratio
+50
+[root@mysql01 /]# sysctl -n vm.overcommit_memory 
+0
+[root@mysql01 /]# sysctl -n vm.swappiness
+30
+[root@mysql01 /]# 
+
+vm.swappiness = 0         #0だと厳しいので1で良いかも
+vm.overcommit_ratio = 99
+fs.file-max =   13133695
+net.core.somaxconn = 1024
+
+[root@mysql01 /]# cat /proc/sys/fs/file-max
+13089263
+[root@mysql01 /]# sysctl -n net.core.somaxconn
+128
+[root@mysql01 /]# sysctl -n vm.overcommit_ratio
+50
+[root@mysql01 /]# sysctl -n vm.overcommit_memory 
+0
+[root@mysql01 /]# sysctl -n vm.swappiness
+30
+[root@mysql01 /]# vim /usr/lib/tuned/virtual-guest/tuned.conf
+[root@mysql01 /]# systemctl restart tuned
+[root@mysql01 /]# cat /proc/sys/fs/file-max
+13133695
+[root@mysql01 /]# sysctl -n net.core.somaxconn
+1024
+[root@mysql01 /]# sysctl -n vm.overcommit_ratio
+99
+[root@mysql01 /]# sysctl -n vm.swappiness
+0
+[root@mysql01 /]# 
+
+[root@mysql01 root]# sysctl vm.swappiness
+vm.swappiness = 30
+[root@mysql01 root]# tuned-adm active
+Current active profile: virtual-guest
+[root@mysql01 root]# grep vm.swappiness /usr/lib/tuned/virtual-guest/tuned.conf
+vm.swappiness = 30
+[root@mysql01 root]#
+
