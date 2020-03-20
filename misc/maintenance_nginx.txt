@@ -1,0 +1,54 @@
+server {
+    listen 80;
+    server_name variable.jp;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name variable.jp;
+    client_max_body_size 40M;
+    send_timeout 10m;
+
+    ssl_session_timeout 10m;
+    ssl_session_cache shared:SSL:10m;
+    ssl_certificate /etc/nginx/variable.jp.crt;
+    ssl_certificate_key /etc/nginx/variable.jp_key;
+    ssl_protocols TLSv1.1 TLSv1.2;
+
+    location / {
+
+        error_page 503 @maintenance;
+        if ( -e /tmp/maintenance.txt ) {
+            return 503;
+        }
+
+        auth_basic "Restricted";
+        auth_basic_user_file /etc/nginx/conf.d/.admin_htpasswd;
+
+        access_log  /var/log/nginx/ssl_access_nginx.log  combined;
+        error_log  /var/log/nginx/ssl_error_nginx.log warn;
+
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+
+        set $host_backend "rails.variable.jp";
+        proxy_pass http://$host_backend:80;
+    }
+
+    location @maintenance {
+        set $maintenance_page "s3-ap-northeast-1.amazonaws.com/public-variable/contents/custom/maintenance.html";
+
+        proxy_set_header Authorization "";
+        proxy_hide_header Last-Modified;
+        proxy_hide_header ETag;
+
+        proxy_pass http://$maintenance_page;
+    }
+
+}
