@@ -16,7 +16,7 @@
 
 ##### or
 
-### Ex:  loop-check-connection-rds.sh <hostname> <username> <password>
+### Ex:  loop-check-connection-rds.sh \<hostname\> \<username\> \<password\>
 
 ```
 [ec2-user@ip-172-31-8-156 workfolder]$ sh loop-check-connection-rds.sh rds-taz.cluster-cpdziwfew7pa.us-east-1.rds.amazonaws.com admin $pass
